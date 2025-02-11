@@ -9,5 +9,4 @@ public class Day27WorkshopApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(Day27WorkshopApplication.class, args);
 	}
-
 }
