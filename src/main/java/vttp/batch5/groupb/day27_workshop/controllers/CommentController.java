@@ -4,7 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -46,7 +49,35 @@ public class CommentController {
 
             return ResponseEntity.badRequest().body(respObj.toString());
         }
-        
     }
 
+    @PutMapping(
+        path="/review/{review_id}",
+        consumes=MediaType.APPLICATION_JSON_VALUE,
+        produces=MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<String> updateComment(
+        @PathVariable(name="review_id") String cid,
+        @RequestBody Comment comment) 
+    {  
+        comment.setCid(cid);
+
+        System.out.println(comment);
+
+        try {
+            commentSvc.updateComment(comment);
+
+            JsonObjectBuilder builder = Json.createObjectBuilder();
+            builder.add("message", "Succesfully updated comment");
+
+            return ResponseEntity.ok().body(builder.build().toString());
+        }
+
+        catch (Exception e) {
+            JsonObjectBuilder builder = Json.createObjectBuilder();
+            builder.add("message", e.getMessage());
+
+            return ResponseEntity.badRequest().body(builder.build().toString());
+        }
+    }
 }

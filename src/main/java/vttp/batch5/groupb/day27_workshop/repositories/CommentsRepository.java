@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Repository;
+
+import com.mongodb.client.result.UpdateResult;
 
 import vttp.batch5.groupb.day27_workshop.models.Comment;
 
@@ -78,4 +81,50 @@ public class CommentsRepository {
         // If exist return name
         return results.get(0).getString(G_NAME);
     }
+
+    /*
+     * db.comments.updateOne(
+            { _id : ObjectId("67ab0dae3fbd6b69411967fb")},
+            {
+            $set : {
+                c_text: "Updated rating to 10", 
+                rating: NumberInt(8), 
+                posted: ISODate("2025-02-11T08:43:26.546+0000")},
+            $push : {edited : {
+                c_text: "Updated rating to 10", 
+                rating: NumberInt(8), 
+                posted: ISODate("2025-02-11T08:43:26.546+0000")
+            }}
+            } 
+        )
+     * 
+     */
+
+     public void updateComment(Comment comment) throws Exception {
+        Query query = new Query();
+
+        Criteria criteriaByCommentId = Criteria.where(C_CID).is(comment.getCid());
+
+        query.addCriteria(criteriaByCommentId);
+
+        Document editRecord = new Document();
+        editRecord.put(C_C_TEXT, comment.getcText());
+        editRecord.put(C_RATING, comment.getRating());
+        editRecord.put(C_POSTED, comment.getPosted());
+
+        Update updateOps = new Update()
+            .set(C_C_TEXT, comment.getcText())
+            .set(C_RATING, comment.getRating())
+            .set(C_POSTED, comment.getPosted())
+            .push("edited", editRecord);
+
+        UpdateResult updateResult = mongoTemplate.updateMulti(query, updateOps, COMMENTS_COLLECTION);
+
+        if (updateResult.getMatchedCount() == 0) {
+            throw new Exception("Comment Id does not exist");
+        }
+        if (updateResult.getModifiedCount() == 0) {
+            throw new Exception("Update was unsuccessful");
+        }
+     }
 }

@@ -10,13 +10,19 @@ public class Comment {
     private int gid;
     private LocalDateTime posted;
     private String gameName;
+    private String cid;
 
     @Override
     public String toString() {
         return "Comment [user=" + user + ", rating=" + rating + ", cText=" + cText + ", gid=" + gid + ", posted="
-                + posted + ", gameName=" + gameName + "]";
+                + posted + ", gameName=" + gameName + ", cid=" + cid + "]";
     }
-    
+    public String getCid() {
+        return cid;
+    }
+    public void setCid(String cid) {
+        this.cid = cid;
+    }
     public String getUser() {
         return user;
     }

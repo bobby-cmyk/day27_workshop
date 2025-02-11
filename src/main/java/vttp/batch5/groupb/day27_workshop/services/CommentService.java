@@ -21,4 +21,12 @@ public class CommentService {
 
         commentRepo.postNewComment(comment);
     }
+
+    public void updateComment(Comment comment) throws Exception {
+
+        LocalDateTime posted = LocalDateTime.now(); 
+        comment.setPosted(posted);
+
+        commentRepo.updateComment(comment);
+    }
 }

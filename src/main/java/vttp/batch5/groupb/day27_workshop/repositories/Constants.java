@@ -2,7 +2,7 @@ package vttp.batch5.groupb.day27_workshop.repositories;
 
 public class Constants {
     public static String COMMENTS_COLLECTION = "comments";
-    public static String C_CID = "c_id";
+    public static String C_CID = "_id";
     public static String C_USER = "user";
     public static String C_RATING = "rating";
     public static String C_C_TEXT = "c_text";
